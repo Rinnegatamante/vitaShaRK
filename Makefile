@@ -21,9 +21,14 @@ $(TARGET).a: $(OBJS)
 	
 clean:
 	@rm -rf $(TARGET).a $(TARGET).elf $(OBJS)
+	@make -C samples/sample1 clean
 	
 install: $(TARGET).a
 	@mkdir -p $(VITASDK)/$(PREFIX)/lib/
 	cp $(TARGET).a $(VITASDK)/$(PREFIX)/lib/
 	@mkdir -p $(VITASDK)/$(PREFIX)/include/
 	cp source/vitashark.h $(VITASDK)/$(PREFIX)/include/
+	
+samples: $(TARGET).a
+	@make -C samples/sample1
+	cp "samples/sample1/vitaShaRK-Sample001.vpk" .
