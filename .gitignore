@@ -4,6 +4,7 @@
 *.bin
 *.sfo
 *.S
+*.wo
 
 # Windows image file caches
 Thumbs.db
