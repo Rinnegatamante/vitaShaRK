@@ -38,14 +38,35 @@ typedef enum shark_type {
 	SHARK_FRAGMENT_SHADER
 } shark_type;
 
+typedef enum shark_log_level {
+	SHARK_LOG_INFO,
+	SHARK_LOG_WARNING,
+	SHARK_LOG_ERROR
+} shark_log_level;
+
+typedef enum shark_warn_level {
+	SHARK_WARN_SILENT,
+	SHARK_WARN_LOW,
+	SHARK_WARN_MEDIUM,
+	SHARK_WARN_HIGH,
+	SHARK_WARN_MAX
+} shark_warn_level;
+
 #define SHARK_DISABLE 0
 #define SHARK_ENABLE  1
 
+// Init/term routines
 int shark_init(const char *path); //!< Initializes runtime shader compiler
+void shark_end(); //!< Terminates runtime shader compiler and frees used memory
+
+// Compiling routines
 SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, shark_type type, shark_opt opt, int32_t use_fastmath, int32_t use_fastprecision, int32_t use_fastint); //!< Compiles a shader with extended settings
 SceGxmProgram *shark_compile_shader(const char *src, uint32_t *size, shark_type type); //!< Compiles a shader
-void shark_clear_output(); //!< Clears output of a successfull compilation
-void shark_end(); //!< Terminates runtime shader compiler and frees used memory
+void shark_clear_output(); //!< Clears output of a compilation attempt
+
+// Logging routines
+void shark_install_log_cb(void (*cb)(const char *msg, shark_log_level msg_level, int line)); //!< Installs a log function for info, warnings and errors
+void shark_set_warnings_level(shark_warn_level level); //!< Sets warnings level for logging
 
 #ifdef __cplusplus
 }
