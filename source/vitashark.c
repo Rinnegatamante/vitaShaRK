@@ -45,7 +45,7 @@ int shark_init(const char *path) {
 	// Initializing sceShaccCg module
 	if (!shark_initialized) {
 		shark_module_id = sceKernelLoadStartModule(path ? path : DEFAULT_SHACCCG_PATH, 0, NULL, 0, NULL, NULL);
-		if (shark_module_id < 0) return -1;
+		if (shark_module_id < 0) return shark_module_id;
 		sceShaccCgSetDefaultAllocator(malloc, free);
 		shark_initialized = 1;
 	}
@@ -85,7 +85,7 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	shark_input.text = src;
 	shark_input.size = *size;
 	
-	// Properly configuring SceShaccCg with requqested settings
+	// Properly configuring SceShaccCg with requested settings
 	SceShaccCgCompileOptions options = {0};
 	options.mainSourceFile = shark_input.fileName;
 	options.targetProfile = type;
