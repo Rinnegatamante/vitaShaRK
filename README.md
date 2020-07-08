@@ -9,7 +9,7 @@ vita-libs-gen SceShaccCg.yml build
 cd build
 make install
 cd ..
-cp shacccg.h $VITASDK/arm-vita-eabi/psp2/shacccg.h
+cp shacccg.h $VITASDK/arm-vita-eabi/include/psp2/shacccg.h
 make install
 ```
 
