@@ -1,7 +1,6 @@
 /*
- * This file is part of vitaGL
+ * This file is part of vitaShaRK
  * Copyright 2017, 2018, 2019, 2020 Rinnegatamante
- * Copyright 2020 Asakura Reiko
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
