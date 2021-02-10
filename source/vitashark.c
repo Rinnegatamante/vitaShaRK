@@ -96,7 +96,7 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	options.useFastmath = use_fastmath;
 	options.useFastint = use_fastint;
 	options.useFastprecision = use_fastprecision;
-	options.pedantic = shark_warnings_level > SHARK_WARN_MEDIUM ? SHARK_ENABLE : SHARK_DISABLE;
+	options.pedantic = shark_warnings_level == SHARK_WARN_MAX ? SHARK_ENABLE : SHARK_DISABLE;
 	options.performanceWarnings = shark_warnings_level > SHARK_WARN_SILENT ? SHARK_ENABLE : SHARK_DISABLE;
 	
 	// Executing shader compilation
