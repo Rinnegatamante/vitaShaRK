@@ -18,6 +18,7 @@
 
 #include "vitashark.h"
 #include <stdlib.h>
+#include <psp2/kernel/modulemgr.h>
 #include <psp2/shacccg.h>
 
 // Default path for SceShaccCg module location
