@@ -23,7 +23,6 @@
 extern "C" {
 #endif
 
-#include <psp2/kernel/modulemgr.h>
 #include <psp2/gxm.h>
 
 typedef enum shark_opt {
