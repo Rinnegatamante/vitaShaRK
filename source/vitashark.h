@@ -23,7 +23,8 @@
 extern "C" {
 #endif
 
-#include <vitasdk.h>
+#include <psp2/kernel/modulemgr.h>
+#include <psp2/gxm.h>
 
 typedef enum shark_opt {
 	SHARK_OPT_SLOW,      //!< Equivalent to O0
