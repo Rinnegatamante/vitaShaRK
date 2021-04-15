@@ -37,6 +37,7 @@ void compileShader(const char *fname, int type) {
 	}
 	
 	shark_clear_output();
+	free(buf);
 }
 
 int main() {
