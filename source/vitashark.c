@@ -29,7 +29,7 @@ static shark_warn_level shark_warnings_level = SHARK_WARN_SILENT;
 
 static SceUID shark_module_id = 0;
 static uint8_t shark_initialized = 0;
-static SceShaccCgCompileOutput *shark_output = NULL;
+static const SceShaccCgCompileOutput *shark_output = NULL;
 static SceShaccCgSourceFile shark_input;
 
 // Dummy Open File callback
@@ -56,6 +56,7 @@ void shark_end() {
 	if (!shark_initialized) return;
 	
 	// Terminating sceShaccCg module
+	sceShaccCgReleaseCompiler();
 	sceKernelStopUnloadModule(shark_module_id, 0, NULL, 0, NULL, NULL);
 	shark_initialized = 0;
 }
@@ -104,8 +105,8 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	SceShaccCgCallbackList callbacks = {0};
 	sceShaccCgInitializeCallbackList(&callbacks, SCE_SHACCCG_TRIVIAL);
 	callbacks.openFile = shark_open_file_cb;
-	const SceShaccCgCompileOutput *shark_output = sceShaccCgCompileProgram(&options, &callbacks, 0);
 	
+	shark_output = sceShaccCgCompileProgram(&options, &callbacks, 0);
 	// Executing logging
 	if (shark_log_cb) {
 		for (int i = 0; i < shark_output->diagnosticCount; ++i) {
