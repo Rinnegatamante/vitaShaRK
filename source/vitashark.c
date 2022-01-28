@@ -31,6 +31,8 @@ static SceUID shark_module_id = 0;
 static uint8_t shark_initialized = 0;
 static const SceShaccCgCompileOutput *shark_output = NULL;
 static SceShaccCgSourceFile shark_input;
+static SceShaccCgCallbackList shark_callbacks;
+static SceShaccCgCompileOptions shark_options;
 
 // Dummy Open File callback
 static SceShaccCgSourceFile *shark_open_file_cb(const char *fileName,
@@ -47,6 +49,8 @@ int shark_init(const char *path) {
 		shark_module_id = sceKernelLoadStartModule(path ? path : DEFAULT_SHACCCG_PATH, 0, NULL, 0, NULL, NULL);
 		if (shark_module_id < 0) return shark_module_id;
 		sceShaccCgSetDefaultAllocator(malloc, free);
+		sceShaccCgInitializeCallbackList(&shark_callbacks, SCE_SHACCCG_TRIVIAL);
+		shark_callbacks.openFile = shark_open_file_cb;
 		shark_initialized = 1;
 	}
 	return 0;
@@ -87,26 +91,21 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	shark_input.size = *size;
 	
 	// Properly configuring SceShaccCg with requested settings
-	SceShaccCgCompileOptions options = {0};
-	options.mainSourceFile = shark_input.fileName;
-	options.targetProfile = type;
-	options.entryFunctionName = "main";
-	options.macroDefinitions = NULL;
-	options.useFx = 1;
-	options.warningLevel = shark_warnings_level;
-	options.optimizationLevel = opt;
-	options.useFastmath = use_fastmath;
-	options.useFastint = use_fastint;
-	options.useFastprecision = use_fastprecision;
-	options.pedantic = shark_warnings_level == SHARK_WARN_MAX ? SHARK_ENABLE : SHARK_DISABLE;
-	options.performanceWarnings = shark_warnings_level > SHARK_WARN_SILENT ? SHARK_ENABLE : SHARK_DISABLE;
+	sceShaccCgInitializeCompileOptions(&shark_options);
+	shark_options.mainSourceFile = shark_input.fileName;
+	shark_options.targetProfile = type;
+	shark_options.entryFunctionName = "main";
+	shark_options.macroDefinitions = NULL;
+	shark_options.useFx = 1;
+	shark_options.warningLevel = shark_warnings_level;
+	shark_options.optimizationLevel = opt;
+	shark_options.useFastmath = use_fastmath;
+	shark_options.useFastint = use_fastint;
+	shark_options.useFastprecision = use_fastprecision;
+	shark_options.pedantic = shark_warnings_level == SHARK_WARN_MAX ? SHARK_ENABLE : SHARK_DISABLE;
+	shark_options.performanceWarnings = shark_warnings_level > SHARK_WARN_SILENT ? SHARK_ENABLE : SHARK_DISABLE;
 	
-	// Executing shader compilation
-	SceShaccCgCallbackList callbacks = {0};
-	sceShaccCgInitializeCallbackList(&callbacks, SCE_SHACCCG_TRIVIAL);
-	callbacks.openFile = shark_open_file_cb;
-	
-	shark_output = sceShaccCgCompileProgram(&options, &callbacks, 0);
+	shark_output = sceShaccCgCompileProgram(&shark_options, &shark_callbacks, 0);
 	// Executing logging
 	if (shark_log_cb) {
 		for (int i = 0; i < shark_output->diagnosticCount; ++i) {
