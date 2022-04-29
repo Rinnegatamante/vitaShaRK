@@ -58,6 +58,7 @@ typedef enum shark_warn_level {
 // Init/term routines
 int shark_init(const char *path); //!< Initializes runtime shader compiler
 void shark_end(); //!< Terminates runtime shader compiler and frees used memory
+void shark_set_allocators(void *(*malloc_func)(size_t size), void (*free_func)(void *ptr)); // Sets custom allocators used by the shader compiler
 
 // Compiling routines
 SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, shark_type type, shark_opt opt, int32_t use_fastmath, int32_t use_fastprecision, int32_t use_fastint); //!< Compiles a shader with extended settings

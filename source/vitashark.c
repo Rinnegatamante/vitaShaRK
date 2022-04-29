@@ -34,6 +34,9 @@ static SceShaccCgSourceFile shark_input;
 static SceShaccCgCallbackList shark_callbacks;
 static SceShaccCgCompileOptions shark_options;
 
+static void *(*shark_malloc)(size_t size) = malloc;
+static void (*shark_free)(void *ptr) = free;
+
 // Dummy Open File callback
 static SceShaccCgSourceFile *shark_open_file_cb(const char *fileName,
 	const SceShaccCgSourceLocation *includedFrom,
@@ -43,12 +46,17 @@ static SceShaccCgSourceFile *shark_open_file_cb(const char *fileName,
 	return &shark_input;
 }
 
+void shark_set_allocators(void *(*malloc_func)(size_t size), void (*free_func)(void *ptr)) {
+	shark_malloc = malloc_func;
+	shark_free = free_func;
+}
+
 int shark_init(const char *path) {
 	// Initializing sceShaccCg module
 	if (!shark_initialized) {
 		shark_module_id = sceKernelLoadStartModule(path ? path : DEFAULT_SHACCCG_PATH, 0, NULL, 0, NULL, NULL);
 		if (shark_module_id < 0) return shark_module_id;
-		sceShaccCgSetDefaultAllocator(malloc, free);
+		sceShaccCgSetDefaultAllocator(shark_malloc, shark_free);
 		sceShaccCgInitializeCallbackList(&shark_callbacks, SCE_SHACCCG_TRIVIAL);
 		shark_callbacks.openFile = shark_open_file_cb;
 		shark_initialized = 1;
