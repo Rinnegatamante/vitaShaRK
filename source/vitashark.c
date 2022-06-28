@@ -121,7 +121,7 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	if (shark_log_cb) {
 		for (int i = 0; i < shark_output->diagnosticCount; ++i) {
 			const SceShaccCgDiagnosticMessage *log = &shark_output->diagnostics[i];
-			shark_log_cb(log->message, log->level, log->location->lineNumber);
+			shark_log_cb(log->message, log->level, log->location ? log->location->lineNumber : -1);
 		}
 	}
 	
