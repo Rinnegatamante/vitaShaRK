@@ -22,6 +22,8 @@
 #include <psp2/shacccg.h>
 #include <shacccg_ext.h>
 
+//#define DISABLE_SHACCCG_EXTENSIONS // Uncomment this to make vitaShaRK not depend on SceShaccCgExt
+
 // Default path for SceShaccCg module location
 #define DEFAULT_SHACCCG_PATH "ur0:/data/libshacccg.suprx"
 
@@ -57,7 +59,9 @@ int shark_init(const char *path) {
 	if (!shark_initialized) {
 		shark_module_id = sceKernelLoadStartModule(path ? path : DEFAULT_SHACCCG_PATH, 0, NULL, 0, NULL, NULL);
 		if (shark_module_id < 0) return shark_module_id;
+#ifndef DISABLE_SHACCCG_EXTENSIONS
 		sceShaccCgExtEnableExtensions();
+#endif
 		sceShaccCgSetDefaultAllocator(shark_malloc, shark_free);
 		sceShaccCgInitializeCallbackList(&shark_callbacks, SCE_SHACCCG_TRIVIAL);
 		shark_callbacks.openFile = shark_open_file_cb;
@@ -71,7 +75,9 @@ void shark_end() {
 	
 	// Terminating sceShaccCg module
 	sceShaccCgReleaseCompiler();
+#ifndef DISABLE_SHACCCG_EXTENSIONS
 	sceShaccCgExtDisableExtensions();
+#endif
 	sceKernelStopUnloadModule(shark_module_id, 0, NULL, 0, NULL, NULL);
 	shark_initialized = 0;
 }
