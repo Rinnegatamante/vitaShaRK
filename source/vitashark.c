@@ -20,9 +20,12 @@
 #include <stdlib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <psp2/shacccg.h>
-#include <shacccg_ext.h>
 
+// Settings
 //#define DISABLE_SHACCCG_EXTENSIONS // Uncomment this to make vitaShaRK not depend on SceShaccCgExt
+#ifndef DISABLE_SHACCCG_EXTENSIONS
+#include <shacccg_ext.h>
+#endif
 
 // Default path for SceShaccCg module location
 #define DEFAULT_SHACCCG_PATH "ur0:/data/libshacccg.suprx"
