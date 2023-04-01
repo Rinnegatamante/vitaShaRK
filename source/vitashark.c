@@ -19,7 +19,6 @@
 #include "vitashark.h"
 #include <stdlib.h>
 #include <psp2/kernel/modulemgr.h>
-#include <psp2/shacccg.h>
 
 // Settings
 //#define DISABLE_SHACCCG_EXTENSIONS // Uncomment this to make vitaShaRK not depend on SceShaccCgExt
@@ -141,4 +140,8 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 
 SceGxmProgram *shark_compile_shader(const char *src, uint32_t *size, shark_type type) {
 	return shark_compile_shader_extended(src, size, type, SHARK_OPT_DEFAULT, SHARK_DISABLE, SHARK_DISABLE, SHARK_DISABLE);
+}
+
+const SceShaccCgCompileOutput *shark_get_internal_compile_output() {
+	return shark_output;
 }

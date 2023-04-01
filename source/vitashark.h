@@ -23,6 +23,7 @@
 extern "C" {
 #endif
 
+#include <psp2/shacccg.h>
 #include <psp2/gxm.h>
 
 typedef enum shark_opt {
@@ -64,6 +65,7 @@ void shark_set_allocators(void *(*malloc_func)(size_t size), void (*free_func)(v
 SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, shark_type type, shark_opt opt, int32_t use_fastmath, int32_t use_fastprecision, int32_t use_fastint); //!< Compiles a shader with extended settings
 SceGxmProgram *shark_compile_shader(const char *src, uint32_t *size, shark_type type); //!< Compiles a shader
 void shark_clear_output(); //!< Clears output of a compilation attempt
+const SceShaccCgCompileOutput *shark_get_internal_compile_output(); //!< Returns the internal SceShaccCgCompileOutput struct from latest compilation attempt
 
 // Logging routines
 void shark_install_log_cb(void (*cb)(const char *msg, shark_log_level msg_level, int line)); //!< Installs a log function for info, warnings and errors
