@@ -38,6 +38,7 @@ static const SceShaccCgCompileOutput *shark_output = NULL;
 static SceShaccCgSourceFile shark_input;
 static SceShaccCgCallbackList shark_callbacks;
 static SceShaccCgCompileOptions shark_options;
+static SceShaccCgLocale shark_locale_mode = SCE_SHACCCG_ENGLISH;
 
 static void *(*shark_malloc)(size_t size) = malloc;
 static void (*shark_free)(void *ptr) = free;
@@ -101,6 +102,11 @@ void shark_clear_output() {
 	}
 }
 
+void shark_set_locale(shark_locale locale) {
+	// Changing current locale
+	shark_locale_mode = (SceShaccCgLocale)locale;
+}
+
 SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, shark_type type, shark_opt opt, int32_t use_fastmath, int32_t use_fastprecision, int32_t use_fastint) {
 	if (!shark_initialized) return NULL;
 	
@@ -116,6 +122,7 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	shark_options.entryFunctionName = "main";
 	shark_options.macroDefinitions = NULL;
 	shark_options.useFx = 1;
+	shark_options.locale = shark_locale_mode;
 	shark_options.warningLevel = shark_warnings_level;
 	shark_options.optimizationLevel = opt;
 	shark_options.useFastmath = use_fastmath;

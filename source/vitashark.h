@@ -39,6 +39,11 @@ typedef enum shark_type {
 	SHARK_FRAGMENT_SHADER
 } shark_type;
 
+typedef enum shark_locale {
+	SHARK_LOCALE_ENGLISH,
+	SHARK_LOCALE_JAPANESE
+} shark_locale;
+
 typedef enum shark_log_level {
 	SHARK_LOG_INFO,
 	SHARK_LOG_WARNING,
@@ -70,6 +75,9 @@ const SceShaccCgCompileOutput *shark_get_internal_compile_output(); //!< Returns
 // Logging routines
 void shark_install_log_cb(void (*cb)(const char *msg, shark_log_level msg_level, int line)); //!< Installs a log function for info, warnings and errors
 void shark_set_warnings_level(shark_warn_level level); //!< Sets warnings level for logging
+
+// Misc routines
+void shark_set_locale(shark_locale locale); //!< Set locale for warnings/errors. Default is SHARK_LOCALE_ENGLISH
 
 #ifdef __cplusplus
 }
