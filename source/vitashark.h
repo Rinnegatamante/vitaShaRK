@@ -63,6 +63,7 @@ typedef enum shark_warn_level {
 
 // Init/term routines
 int shark_init(const char *path); //!< Initializes runtime shader compiler
+int shark_init_simple(const char *path); //!< Initializes runtime shader compiler with Vita3K compatibility
 void shark_end(); //!< Terminates runtime shader compiler and frees used memory
 void shark_set_allocators(void *(*malloc_func)(size_t size), void (*free_func)(void *ptr)); // Sets custom allocators used by the shader compiler
 

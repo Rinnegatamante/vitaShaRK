@@ -21,10 +21,7 @@
 #include <psp2/kernel/modulemgr.h>
 
 // Settings
-//#define DISABLE_SHACCCG_EXTENSIONS // Uncomment this to make vitaShaRK not depend on SceShaccCgExt
-#ifndef DISABLE_SHACCCG_EXTENSIONS
 #include <shacccg_ext.h>
-#endif
 
 // Default path for SceShaccCg module location
 #define DEFAULT_SHACCCG_PATH "ur0:/data/libshacccg.suprx"
@@ -39,6 +36,7 @@ static SceShaccCgSourceFile shark_input;
 static SceShaccCgCallbackList shark_callbacks;
 static SceShaccCgCompileOptions shark_options;
 static SceShaccCgLocale shark_locale_mode = SCE_SHACCCG_ENGLISH;
+static uint8_t shark_is_simple = 0;
 
 static void *(*shark_malloc)(size_t size) = malloc;
 static void (*shark_free)(void *ptr) = free;
@@ -62,15 +60,28 @@ int shark_init(const char *path) {
 	if (!shark_initialized) {
 		shark_module_id = sceKernelLoadStartModule(path ? path : DEFAULT_SHACCCG_PATH, 0, NULL, 0, NULL, NULL);
 		if (shark_module_id < 0) return shark_module_id;
-#ifndef DISABLE_SHACCCG_EXTENSIONS
 		sceShaccCgExtEnableExtensions();
-#endif
 		sceShaccCgSetDefaultAllocator(shark_malloc, shark_free);
 		sceShaccCgInitializeCallbackList(&shark_callbacks, SCE_SHACCCG_TRIVIAL);
 		shark_callbacks.openFile = shark_open_file_cb;
 		shark_initialized = 1;
+		shark_is_simple = 0;
 	}
 	return 0;
+}
+
+int shark_init_simple(const char *path) {
+	// Initializing sceShaccCg module
+	if (!shark_initialized) {
+		shark_module_id = sceKernelLoadStartModule(path ? path : DEFAULT_SHACCCG_PATH, 0, NULL, 0, NULL, NULL);
+		if (shark_module_id < 0) return shark_module_id;
+		sceShaccCgSetDefaultAllocator(shark_malloc, shark_free);
+		sceShaccCgInitializeCallbackList(&shark_callbacks, SCE_SHACCCG_TRIVIAL);
+		shark_callbacks.openFile = shark_open_file_cb;
+		shark_initialized = 1;
+		shark_is_simple = 1;
+	}
+	return 0;	
 }
 
 void shark_end() {
@@ -78,9 +89,8 @@ void shark_end() {
 	
 	// Terminating sceShaccCg module
 	sceShaccCgReleaseCompiler();
-#ifndef DISABLE_SHACCCG_EXTENSIONS
-	sceShaccCgExtDisableExtensions();
-#endif
+	if (!shark_is_simple)
+		sceShaccCgExtDisableExtensions();
 	sceKernelStopUnloadModule(shark_module_id, 0, NULL, 0, NULL, NULL);
 	shark_initialized = 0;
 }
@@ -142,6 +152,7 @@ SceGxmProgram *shark_compile_shader_extended(const char *src, uint32_t *size, sh
 	
 	// Returning output
 	if (shark_output->programData) *size = shark_output->programSize;
+	
 	return (SceGxmProgram *)shark_output->programData;
 }
 
