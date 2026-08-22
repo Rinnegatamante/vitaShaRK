@@ -77,6 +77,9 @@ const SceShaccCgCompileOutput *shark_get_internal_compile_output(); //!< Returns
 void shark_install_log_cb(void (*cb)(const char *msg, shark_log_level msg_level, int line)); //!< Installs a log function for info, warnings and errors
 void shark_set_warnings_level(shark_warn_level level); //!< Sets warnings level for logging
 
+// Debug routines
+void shark_set_shader_association_path(const char *path); //!< Sets path where to save shader association files for Razor (Disabled if not set)
+
 // Misc routines
 void shark_set_locale(shark_locale locale); //!< Set locale for warnings/errors. Default is SHARK_LOCALE_ENGLISH
 
